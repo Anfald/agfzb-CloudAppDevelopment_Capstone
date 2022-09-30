@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 
     <title>Contact Us</title>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -14,33 +12,60 @@
         <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
         <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
  </head>
-    <body>
-        {% include 'Navbar.html' %}
+ <body>
+       <!--Add a nav bar here -->
+       <nav class="navbar nnavbar-dark bg-dark">
+            <div class="container-fluid">
+               <div class="navbar-header">
+                   <a class="nav-link" href="/djangoapp">Main</a>
+                </div>
+                 <ul class="nav navbar-nav navbar-right">
+                 {% if user.is_authenticated %}
+                      <li>
+                         <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                         <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                      </li>
+                 {% else %}
+                      <li>
+                           <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                               {% csrf_token %}
+                               <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Username" name="username" >
+                                    <input type="password" class="form-control" placeholder="Username" name="psw" >
+                                    <button class="btn btn-primary" type="submit">Login</button>
+                                    <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                                 </div>
+                            </form>
+                      </li>
+                 {% endif %}
+             </ul>
+           </div>
+        </nav>
         <div class="container">
             <p class="heading-txt" style="font-size: 2em; margin-bottom: 3%; text-align: center;">Contact</p>
             <div style="margin-top: 5%;display: flex; justify-content: space-evenly; flex-wrap: wrap;">
-            <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div  class="navbar navbar-light" style="background-color: #e3f2fd;" style="max-width: 18rem;">
                 <div class="card-header">Contact Information</div>
                 <div class="card-body">
                     <h5 class="card-title">Customer Care</h5>
                     <p class="card-text">Name: Anfal </br> Mobile: 444443 </br> Email: Anfal@dealership.com </p>
                 </div>
             </div>
-                    <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div   class="card text-white " style="background-color: #e3f2fd;" style="max-width: 18rem;">
                 <div class="card-header">Contact Information</div>
                 <div class="card-body">
                     <h5 class="card-title">Customer Care</h5>
                     <p class="card-text">Name: Nora </br> Mobile: 329547 </br> Email: Nora@dealership.com </p>
                 </div>
             </div>
-                    <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div   class="card text-white " style="background-color: #e3f2fd;" style="max-width: 18rem;">
                 <div class="card-header">Contact Information</div>
                 <div class="card-body">
                     <h5 class="card-title">Customer Care</h5>
                     <p class="card-text">Name: Hind </br> Mobile: 198354 </br> Email: Hind@dealership.com </p>
                 </div>
             </div>
-                    <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+            <div   class="card text-white "  style="background-color: #e3f2fd;" style="max-width: 18rem;">
                 <div class="card-header">Contact Information</div>
                 <div class="card-body">
                     <h5 class="card-title">Customer Care</h5>
@@ -56,5 +81,5 @@
             </div>
             </div>
         </div>
-    </body>
+  </body>
 </html>
