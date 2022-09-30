@@ -10,11 +10,14 @@ from django.utils.timezone import now
 # - Any other fields you would like to include in car make model
 
 class CarMake(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
-    desc = models.CharField(max_length=200)
+    name = models.CharField(null= False, max_length=30, default='car model')
+    desc = models.CharField(null= False, max_length=200, default='car description ')
+    
 # - __str__ method to print a car make object
     def __str__(self):     
-        return self.name
+       # return self.name
+        return 'Name:' + self.name + ',' + \
+            'Description:' + self.description
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
 # - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
@@ -24,20 +27,18 @@ class CarMake(models.Model):
 # - Year (DateField)
 # - Any other fields you would like to include in car model
 class CarModel(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
-    id = models.CharField(max_length=2)
-    type = models.CharField(max_length=10)
-    year = models.DateField(null=True)
-    carmakes = models.ManyToManyField(CarMake)
+    carmake = models.ForeignKey(CarMake, null= True, on_delete=models.CASCADE)
+    name = models.CharField(null= False, max_length=30, default='car name')
+    dealerid = models.IntegerField(null=True)
+    year = models.DateField(null= True)
 # - __str__ method to print a car make object
     def __str__(self):
-        return self.name
+        return 'Name ' + self.name
 
 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 class CarDealer:
-
     def __init__(self, address, city, full_name, id, lat, long, short_name, st, zip):
         # Dealer address
         self.address = address
@@ -57,14 +58,14 @@ class CarDealer:
         self.st = st
         # Dealer zip
         self.zip = zip
+        self.idx = 0
 
     def __str__(self):
         return "Dealer name: " + self.full_name
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
 class DealerReview:
-
-    def __init__(self, dealership, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, id):
+    def __init__(self, dealership, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment):
         # Dealership
         self.dealership = dealership
         # Dealer name
@@ -84,7 +85,7 @@ class DealerReview:
         # sentiment
         self.sentiment = sentiment
         # id
-        self.id = id
+       # self.id = id
 
     def __str__(self):
-        return "Dealer name: " + self.full_name
+        return  "Review: " + self.review
