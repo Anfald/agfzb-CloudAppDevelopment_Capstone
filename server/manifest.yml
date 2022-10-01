@@ -1,13 +1,13 @@
   applications:
   - name: djangoapp
     routes:
-      - route: eu-gb.cf.appdomain.cloud
+      - route: apci.eu-gb.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
   - name: djangoapp-nginx
     routes:
-      - route: eu-gb.cf.appdomain.cloud/static
+      - route: apci.eu-gb.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack
 route:
-   <img src="images/settingspy.png" width="75%"/>
+ 
