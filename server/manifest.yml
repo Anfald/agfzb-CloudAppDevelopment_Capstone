@@ -9,5 +9,5 @@
       - route: carshipdel.eu-gb.cf.appdomain.cloud/static
     memory: 128M
     buildpack: staticfile_buildpack
-route:
+
  
