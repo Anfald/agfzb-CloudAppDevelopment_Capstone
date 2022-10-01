@@ -1,12 +1,12 @@
   applications:
   - name: djangoapp
     routes:
-      - route: https://apci.eu-gb.mybluemix.net
+      - route: Https://api.eu-gb.cf.cloud.ibm.com
     memory: 128M
     buildpack: python_buildpack
   - name: djangoapp-nginx
     routes:
-      - route: https://apci.eu-gb.mybluemix.net/static
+      - route: Https://api.eu-gb.cf.cloud.ibm.com/static
     memory: 128M
     buildpack: staticfile_buildpack
 route:
