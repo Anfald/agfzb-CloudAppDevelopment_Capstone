@@ -52,7 +52,7 @@ def logout_request(request):
     print("Log out the user `{}`".format(request.user.username))
     logout(request)
     # Redirect user back to carlist view
-    return redirect (/djangoapp')     
+    return redirect ('/djangoapp')       
                   #('djangoapp:index') to redirect to main page but /djangoapp is better
 
 # Create a `registration_request` view to handle sign up request
