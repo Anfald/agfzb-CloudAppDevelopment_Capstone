@@ -108,7 +108,7 @@ def get_dealerships(request):
 def get_dealer_details(request, dealer_id):
      context = {}
     if request.method == "GET":
-        url = 'https://5b93346d.us-south.apigw.appdomain.cloud/reviews/get-review'     ### ubdate
+        url = 'https://eu-gb.functions.appdomain.cloud/api/v1/web/Anfald_dev/dealership-package/get-review?id=15'     ### ubdate see ?id=15
         context = {"reviews":  restapis.get_dealer_reviews_by_id_from_cf(url, dealer_id)}
         return render(request, 'djangoapp/dealer_details.html', context)
 
