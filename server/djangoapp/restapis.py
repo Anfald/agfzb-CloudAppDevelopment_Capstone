@@ -92,6 +92,37 @@ def get_dealer_reviews_from_cf(url, dealerId):
             results.append(review_obj)
 
     return results
+def get_dealer_by_id(url, dealer_id):
+    # Call get_request with the dealer_id param
+    json_result = get_request(url,dealer_id=dealer_id)
+    print(json_result)
+    # Create a CarDealer object from response
+    dealer = json_result["entries"]
+    dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
+                           id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
+                           short_name=dealer["short_name"],
+                           st=dealer["st"], zip=dealer["zip"])
+
+    return dealer_obj
+
+
+# Gets all dealers in the specified state from the Cloudant DB with the Cloud Function get-dealerships
+def get_dealers_by_state(url, state):
+    results = []
+    # Call get_request with the state param
+    json_result = get_request(url, state=state)
+    dealers = json_result["body"]["docs"]
+    # For each dealer in the response
+    for dealer in dealers:
+        # Create a CarDealer object with values in `doc` object
+        dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
+                               id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
+                               short_name=dealer["short_name"],
+                               st=dealer["st"], zip=dealer["zip"])
+        results.append(dealer_obj)
+
+    return results
+
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 # def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
