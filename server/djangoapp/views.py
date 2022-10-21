@@ -61,7 +61,7 @@ def registration_request(request):
      # from the course (Developing Applications with SQL, Databases, and Django) I see like this method              
     # If it is a GET request, just render the registration page
     if request.method == 'GET':
-        return render(request, 'djangoapp/registration.html', context)
+       return render(request, 'djangoapp/registration.html', context)
     # If it is a POST request
     elif request.method == 'POST':
         # Get user information from request.POST
