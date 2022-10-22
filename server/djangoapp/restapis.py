@@ -67,31 +67,78 @@ def get_dealers_from_cf(url, **kwargs):
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
-def get_dealer_reviews_from_cf(url, dealerId):
+def get_dealer_reviews_from_cf(url, dealer_id):
     results = []
-    # Call get_request with a URL parameter
-    json_result = get_request(url , dealerId=dealerId)
+    # Perform a GET request with the specified dealer id
+    json_result = get_request(url, dealerId = dealer_id)
+
     if json_result:
-        # Get the row list in JSON as dealers
-         reviews = json_result['entries']
-         for review in reviews:
-             try:
-                review_obj = models.DealerReview(name = review["name"], 
-                dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
-                purchase_date = review["purchase_date"], car_make = review['car_make'],
-                car_model = review['car_model'], car_year= review['car_year'], sentiment= "none")
-             except:
-                review_obj = models.DealerReview(name = review["name"], 
-                dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
-                purchase_date = 'none', car_make = 'none',
-                car_model = 'none', car_year= 'none', sentiment= "none")
-                
+        # Get all review data from the response
+        reviews = json_result["body"]["data"]["docs"]
+        # For each review in the response
+        for review in reviews:
+            # Create a DealerReview object from the data
+            review_content = review["review"]
+            id = review["_id"]
+            name = review["name"]
+            purchase = review["purchase"]
+            dealership = review["dealerships"]
+
+            try:
+                # These values may be missing
+                car_make = review["car_make"]
+                car_model = review["car_model"]
+                car_year = review["car_year"]
+                purchase_date = review["purchase_date"]
+
+                # Create a review object with values in 'doc' object
+                review_obj = DealerReview(
+                    dealership=dealership, id=id, name=name, purchase=purchase, 
+                    review=review_content, car_make=car_make, car_model=car_model, 
+                    car_year=car_year, purchase_date=purchase_date
+                    )
+            except KeyError:
+                print("Something missing from this review. Using default values.")
+                # Create review object with default values
+                review_obj = DealerReview(
+                    dealership=dealership, id=id, name=name, purchase=purchase,
+                    review=review_content
+                    )
+            # Analyze sentiment of the review text and save it to sentiment attribute
             review_obj.sentiment = analyze_review_sentiments(review_obj.review)
-            print(review_obj.sentiment)
-                    
+            print("sentiment: {review_obj.sentiment}")
+
+            # Save review object to the list result
             results.append(review_obj)
 
     return results
+###########
+#def get_dealer_reviews_from_cf(url, dealerId):
+#    results = []
+ #   # Call get_request with a URL parameter
+  #  json_result = get_request(url , dealerId=dealerId)
+  #  if json_result:
+        # Get the row list in JSON as dealers
+   #      reviews = json_result['entries']
+    #     for review in reviews:
+     #        try:
+      #          review_obj = models.DealerReview(name = review["name"], 
+       #         dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
+        #        purchase_date = review["purchase_date"], car_make = review['car_make'],
+        #        car_model = review['car_model'], car_year= review['car_year'], sentiment= "none")
+        #     except:
+         #       review_obj = models.DealerReview(name = review["name"], 
+         #       dealership = review["dealership"], review = review["review"], purchase=review["purchase"],
+         #       purchase_date = 'none', car_make = 'none',
+          #      car_model = 'none', car_year= 'none', sentiment= "none")
+                
+         #   review_obj.sentiment = analyze_review_sentiments(review_obj.review)
+          #  print(review_obj.sentiment)
+                    
+         #   results.append(review_obj)
+
+ #   return results
+
 def get_dealer_by_id(url, dealer_id):
     # Call get_request with the dealer_id param
     json_result = get_request(url,dealer_id=dealer_id)
