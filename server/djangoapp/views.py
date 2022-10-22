@@ -119,35 +119,49 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
-   if request.method == "GET":
-        dealersid = dealer_id
-        url = "https://5b93346d.us-south.apigw.appdomain.cloud/dealerships/dealer-get?dealerId={0}".format(dealersid) ### ubdate
-        # Get dealers from the URL
-        context = {
-            "cars": models.CarModel.objects.all(),
-            "dealers": restapis.get_dealers_from_cf(url),
-        }
-        return render(request, 'djangoapp/add_review.html', context)
-    if request.method == "POST":
-        if request.user.is_authenticated:
+    # Verify the user is authenticated
+    if request.user.is_authenticated:
+        # GET request renders the page with the form for filling out a review
+        if request.method == "GET":
+            url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/Anfald_dev/dealership-package/get-dealership?id=dealer_id"   ### here the end i edit 
+            # Get dealer details from the API
+            context = {
+                "cars": CarModel.objects.all(),
+                "dealer": get_dealer_by_id(url, dealer_id=dealer_id),
+            }
+            return render(request, 'djangoapp/add_review.html', context)
+        # POST request posts the content in the review submission form to the Cloudant DB using the post_review Cloud Function
+        if request.method == "POST":
             form = request.POST
-            review = {
-                "name": "{request.user.first_name} {request.user.last_name}",
-                "dealership": dealer_id,
-                "review": form["content"],
-                "purchase": form.get("purchasecheck"),
-                }
+            review = dict()
+            review["name"] = "{request.user.first_name} {request.user.last_name}"
+            review["dealership"] = dealer_id
+            review["review"] = form["content"]
+            review["purchase"] = form.get("purchasecheck")
+            if review["purchase"]:
+                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%d/%m/%Y").isoformat()
+            car = CarModel.objects.get(pk=form["car"])
+            review["car_make"] = car.car_make.name
+            review["car_model"] = car.name
+            review["car_year"] = car.year
+
+            # If the user bought the car, get the purchase date
             if form.get("purchasecheck"):
-                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
-                car = models.CarModel.objects.get(pk=form["car"])
-                review["car_make"] = car.carmake.name
-                review["car_model"] = car.name
-                review["car_year"]= car.year.strftime("%Y")
+                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%d/%m/%Y").isoformat()
+            else:
+                review["purchase_date"] = None
+
+            url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/Anfald_dev/dealership-package/post-review"
             json_payload = {"review": review}
-            print (json_payload)
-            url = "https://5b93346d.us-south.apigw.appdomain.cloud/dealerships/reviews/review-post"
-            restapis.post_request(url, json_payload, dealerId=dealer_id)
+            result = post_request(url, json_payload, dealerId=dealer_id)
+            if int(result.status_code) == 200:
+                print("Review posted successfully.")
+
+            # After posting the review the user is redirected back to the dealer details page
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+
         else:
+            # If user isn't logged in, redirect to login page
+            print("Please login in to post a review")
             return redirect("/djangoapp/login")
 
