@@ -16,11 +16,11 @@ def get_request(url,**kwargs):
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
+    #    response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
        
-      #  requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-                   #                 auth=HTTPBasicAuth('apikey', api_key))
+        requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+                                   auth=HTTPBasicAuth('B5fDFSOU_ZA8xHOYMujpMFP_Aqnq1d6D69mNA_wTFlPg', api_key))
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -177,8 +177,8 @@ def get_dealers_by_state(url, state):
 
 def analyze_review_sentiments(dealerreview):
    # get_request(url,**kwargs)
-    api_key = "kkkey"
-    url = "api page"
+    api_key = "B5fDFSOU_ZA8xHOYMujpMFP_Aqnq1d6D69mNA_wTFlPg"
+    url = "https://cc248213-edab-40c2-b84b-e84c1536c6c6-bluemix.cloudantnosqldb.appdomain.cloud"
     texttoanalyze= text
     version = '20000'
     authenticator = IAMAuthenticator(api_key)
