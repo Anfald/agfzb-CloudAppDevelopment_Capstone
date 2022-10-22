@@ -95,7 +95,7 @@ def get_dealerships(request):
     # if request.method == "GET":
     #    return render(request, 'djangoapp/index.html', context)
     if request.method == "GET":
-        url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/Anfald_dev/dealership-package/get-dealership" # here update
+        url = "https://eu-gb.functions.appdomain.cloud/api/v1/web/Anfald_dev/dealership-package/get-dealership.json" # here update
         context = {"dealerships": restapis.get_dealers_from_cf(url)}
         # Get dealers from the URL
        # dealerships = get_dealers_from_cf(url)
