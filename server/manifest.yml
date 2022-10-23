@@ -1,12 +1,12 @@
   applications:
   - name: djangoapp
     routes:
-      - route: carshipdel.eu-gb.cf.appdomain.cloud
+      - route: carshipdel.eu-gb.cf.appdomain.cloud.net
     memory: 128M
     buildpack: python_buildpack
   - name: djangoapp-nginx
     routes:
-      - route: carshipdel.eu-gb.cf.appdomain.cloud/static
+      - route: carshipdel.eu-gb.cf.appdomain.cloud.net/static
     memory: 128M
     buildpack: staticfile_buildpack
 
